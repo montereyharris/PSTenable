@@ -102,7 +102,7 @@ function Connect-PSTenable {
                 Register-PSFConfig -FullName "PSTenable.accesskey"
                 Register-PSFConfig -FullName "PSTenable.secretkey"
                 Register-PSFConfig -FullName "PSTenable.Server"
-                Register-PSFCallback -FullName "PSTenable.Apikey"
+                Register-PSFConfig -FullName "PSTenable.Apikey"
             }
 
         }Else{
