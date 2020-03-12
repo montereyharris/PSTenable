@@ -19,28 +19,35 @@ Function Invoke-PSTenableTokenStatus {
 
     )
 
-    # Credentials
-    $APICredential = @{
-        username       = (Get-PSFConfigValue -FullName 'PSTenable.Credential').UserName
-        password       = (Get-PSFConfigValue -FullName 'PSTenable.Credential').GetNetworkCredential().Password
-        releaseSession = "FALSE"
-    }
+    $apiKeyStatus = Get-PSFConfigValue -FullName "PSTenable.ApiKey"
 
-    $SessionSplat = @{
-        URI             = "$(Get-PSFConfigValue -FullName 'PSTenable.Server')/token"
-        SessionVariable = "SCSession"
-        Method          = "Post"
-        ContentType     = "application/json"
-        Body            = (ConvertTo-Json $APICredential)
-        ErrorAction     = "Stop"
-    }
+    if($apiKeyStatus -eq $false){
 
-    $Session = Invoke-RestMethod @SessionSplat
+        # Credentials
+        $APICredential = @{
+            username       = (Get-PSFConfigValue -FullName 'PSTenable.Credential').UserName
+            password       = (Get-PSFConfigValue -FullName 'PSTenable.Credential').GetNetworkCredential().Password
+            releaseSession = "FALSE"
+        }
 
-    if ($Session.response.releaseSession -eq $true) {
-        Write-Output $true
-    } else {
-        Write-Output $false
+        $SessionSplat = @{
+            URI             = "$(Get-PSFConfigValue -FullName 'PSTenable.Server')/token"
+            SessionVariable = "SCSession"
+            Method          = "Post"
+            ContentType     = "application/json"
+            Body            = (ConvertTo-Json $APICredential)
+            ErrorAction     = "Stop"
+        }
+
+        $Session = Invoke-RestMethod @SessionSplat
+
+        if ($Session.response.releaseSession -eq $true) {
+            Write-Output $true
+        } else {
+            Write-Output $false
+        }
+    }else{
+        Write-Output $apiKeyStatus
     }
 }
 
