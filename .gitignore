@@ -1,3 +1,4 @@
 # Don't check in the Output dir
 Output/
 .DS_Store
+launch.json

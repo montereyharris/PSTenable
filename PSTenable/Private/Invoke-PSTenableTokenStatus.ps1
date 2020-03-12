@@ -21,6 +21,8 @@ Function Invoke-PSTenableTokenStatus {
 
     $apiKeyStatus = Get-PSFConfigValue -FullName "PSTenable.ApiKey"
 
+    Write-Debug "$apikeystatus"
+
     if($apiKeyStatus -eq $false){
 
         # Credentials
@@ -47,7 +49,6 @@ Function Invoke-PSTenableTokenStatus {
             Write-Output $false
         }
     }else{
-        Write-Output $apiKeyStatus
+        Write-Output $true
     }
 }
-
