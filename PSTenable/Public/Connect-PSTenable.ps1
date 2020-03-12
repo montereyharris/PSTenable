@@ -96,11 +96,13 @@ function Connect-PSTenable {
             Set-PSFconfig -FullName "PSTenable.accesskey" -Value $accesskey
             Set-PSFconfig -FullName "PSTenable.secretkey" -Value $secretkey
             Set-PSFConfig -FullName "PSTenable.Server" -Value $TenableServer
+            Set-PSFConfig -FullName "PSTenable.ApiKey" -Value $true
 
             if ($Register -eq $true) {
                 Register-PSFConfig -FullName "PSTenable.accesskey"
                 Register-PSFConfig -FullName "PSTenable.secretkey"
                 Register-PSFConfig -FullName "PSTenable.Server"
+                Register-PSFCallback -FullName "PSTenable.Apikey"
             }
 
         }Else{
@@ -108,12 +110,14 @@ function Connect-PSTenable {
             Set-PSFconfig -FullName "PSTenable.Token" -Value $Session.response.token
             Set-PSFConfig -FullName "PSTenable.Server" -Value $TenableServer
             Set-PSFconfig -FullName "PSTenable.Credential" -Value $Credential
+            Set-PSFConfig -FullName  "PSTenable.ApiKey" -Value $false
 
             if ($Register -eq $true) {
                 Register-PSFConfig -FullName "PSTenable.WebSession"
                 Register-PSFConfig -FullName "PSTenable.Token"
                 Register-PSFConfig -FullName "PSTenable.Server"
                 Register-PSFConfig -FullName "PSTenable.Token"
+                Set-PSFConfig -FullName  "PSTenable.ApiKey"
             }
         }
     }
