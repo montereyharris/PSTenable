@@ -36,10 +36,20 @@ function Invoke-PSTenableRest {
 
     Begin {
 
+        if((Get-PSFConfigValue -FullName "PSTenable.ApiKey" )){
+            #Check for API Key
+            $headers = @{
+                "x-apikey" = accesskey=$(Get-PSFConfigValue -FullName 'PSTenable.accesskey');
+                secretkey=$(Get-PSFConfigValue -FullName 'PSTenable.secretkey');}
+
+        }else{
+            $headers = @{"X-SecurityCenter" = $(Get-PSFConfigValue -FullName 'PSTenable.Token') }
+        }
+
         $RestMethodParams = @{
             URI         = $(Get-PSFConfigValue -FullName 'PSTenable.Server') + $Endpoint
             Method      = $Method
-            Headers     = @{"X-SecurityCenter" = $(Get-PSFConfigValue -FullName 'PSTenable.Token') }
+            Headers     = $headers
             ContentType = "application/json"
             ErrorAction = "Stop"
             WebSession  = $(Get-PSFConfigValue -FullName "PSTenable.WebSession")
