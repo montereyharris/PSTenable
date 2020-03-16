@@ -38,21 +38,33 @@ function Invoke-PSTenableRest {
 
         if((Get-PSFConfigValue -FullName "PSTenable.ApiKey" )){
             #Check for API Key
+            $accessKey = Get-PSFConfigValue -FullName 'PSTenable.accesskey'
+            $secretkey= Get-PSFConfigValue -FullName 'PSTenable.secretkey'
+
+            $authString ="accesskey = $accessKey;secretkey=$secretkey;"
+
             $headers = @{
-                "x-apikey" = accesskey=$(Get-PSFConfigValue -FullName 'PSTenable.accesskey');
-                secretkey=$(Get-PSFConfigValue -FullName 'PSTenable.secretkey');}
+                "x-apikey" = $authString
+            }
+            $RestMethodParams = @{
+                URI         = $(Get-PSFConfigValue -FullName 'PSTenable.Server') + '/rest'+ $Endpoint
+                Method      = $Method
+                Headers     = $headers
+                ContentType = "application/json"
+                ErrorAction = "Stop"
+            }
 
         }else{
             $headers = @{"X-SecurityCenter" = $(Get-PSFConfigValue -FullName 'PSTenable.Token') }
-        }
 
-        $RestMethodParams = @{
-            URI         = $(Get-PSFConfigValue -FullName 'PSTenable.Server') + $Endpoint
-            Method      = $Method
-            Headers     = $headers
-            ContentType = "application/json"
-            ErrorAction = "Stop"
-            WebSession  = $(Get-PSFConfigValue -FullName "PSTenable.WebSession")
+            $RestMethodParams = @{
+                URI         = $(Get-PSFConfigValue -FullName 'PSTenable.Server') + $Endpoint
+                Method      = $Method
+                Headers     = $headers
+                ContentType = "application/json"
+                ErrorAction = "Stop"
+                WebSession  = $(Get-PSFConfigValue -FullName "PSTenable.WebSession")
+            }
         }
 
         if ($PSBoundParameters.ContainsKey('Body')) {
@@ -71,6 +83,8 @@ function Invoke-PSTenableRest {
         $availableTls | ForEach-Object {
             [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor $_
         }
+
+        Write-Debug $RestMethodParams.uri
 
         Invoke-RestMethod @RestMethodParams
     }
