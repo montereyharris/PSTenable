@@ -49,6 +49,6 @@ Function Invoke-PSTenableTokenStatus {
             Write-Output $false
         }
     }else{
-        Write-Output $true
+        Write-Output $false
     }
 }
